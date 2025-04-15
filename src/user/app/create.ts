@@ -6,6 +6,11 @@ export const handler = (
   console.log("Create User Lambda", process.env.USER_TABLE);
   console.log("EVENT", event);
 
+  console.log(
+    "TOKEN",
+    event.requestContext.authorizer?.principalId || "No principalId"
+  );
+
   return Promise.resolve({
     statusCode: 200,
     body: JSON.stringify({
