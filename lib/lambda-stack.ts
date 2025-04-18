@@ -9,16 +9,23 @@ interface LambdaStackProps extends cdk.StackProps {
 }
 
 export class LambdaStack extends cdk.Stack {
+  public createUserLambda: NodejsFunction;
   constructor(scope: Construct, id: string, props: LambdaStackProps) {
     super(scope, id, props);
 
-    new NodejsFunction(this, `Create-UserLambda-${process.env.ENV}`, {
-      functionName: `Create -UserLambda-${process.env.ENV}`,
-      entry: join(__dirname, "../src/user/app/create.ts"),
-      handler: "handler",
-      environment: {
-        USER_TABLE: props.tableName,
-      },
-    });
+    const createUserLambda = new NodejsFunction(
+      this,
+      `Create-UserLambda-${process.env.ENV}`,
+      {
+        functionName: `Create -UserLambda-${process.env.ENV}`,
+        entry: join(__dirname, "../src/user/app/create.ts"),
+        handler: "handler",
+        environment: {
+          USER_TABLE: props.tableName,
+        },
+      }
+    );
+
+    this.createUserLambda = createUserLambda;
   }
 }

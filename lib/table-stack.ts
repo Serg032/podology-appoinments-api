@@ -4,10 +4,11 @@ import { Construct } from "constructs";
 import "dotenv/config";
 
 export class TableStack extends cdk.Stack {
+  public userTable: TableV2;
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    new TableV2(this, `UserTable-${process.env.ENV}`, {
+    const userTable = new TableV2(this, `UserTable-${process.env.ENV}`, {
       tableName: `UserTable-${process.env.ENV}`,
       partitionKey: {
         name: "id",
