@@ -11,13 +11,15 @@ const tableStack = new TableStack(
   `Podologist-TableStack-${process.env.ENV}`,
   {}
 );
+
 const lambdaStack = new LambdaStack(
   app,
   `Podologist-LambdaStack-${process.env.ENV}`,
   {
-    tableName: tableStack.userTable.tableName,
+    userTable: tableStack.userTable,
   }
 );
+
 new ApiStack(app, `Podologist-ApiStack-${process.env.ENV}`, {
   createUserLambda: lambdaStack.createUserLambda,
 });
