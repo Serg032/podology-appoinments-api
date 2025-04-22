@@ -15,9 +15,9 @@ const lambdaStack = new LambdaStack(
   app,
   `Podologist-LambdaStack-${process.env.ENV}`,
   {
-    userTable: tableStack.userTable,
+    tableName: tableStack.userTable.tableName,
   }
 );
 new ApiStack(app, `Podologist-ApiStack-${process.env.ENV}`, {
-  createUser: lambdaStack.createUser,
+  createUserLambda: lambdaStack.createUserLambda,
 });
