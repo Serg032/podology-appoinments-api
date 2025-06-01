@@ -18,3 +18,12 @@ export interface CreateClientUserCommand {
   email: string;
   password: string;
 }
+
+export interface CreateClientUserValidationResponse {
+  result: boolean;
+  message?: string;
+}
+
+export interface RegisterResponse extends User {
+  token: string;
+}

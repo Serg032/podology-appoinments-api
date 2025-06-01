@@ -10,22 +10,26 @@ export class TableStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const userTable = new TableV2(this, generateResourceName('podologist-user-table'), {
-      tableName: generateResourceName('podologist-user-table'),
-      partitionKey: {
-        name: "id",
-        type: AttributeType.STRING,
-      },
-      globalSecondaryIndexes: [
-        {
-          indexName: "email-index",
-          partitionKey: {
-            name: "email",
-            type: AttributeType.STRING,
-          },
+    const userTable = new TableV2(
+      this,
+      generateResourceName("user-table", scope),
+      {
+        tableName: generateResourceName("user-table-name", scope),
+        partitionKey: {
+          name: "id",
+          type: AttributeType.STRING,
         },
-      ],
-    });
+        globalSecondaryIndexes: [
+          {
+            indexName: "email-index",
+            partitionKey: {
+              name: "email",
+              type: AttributeType.STRING,
+            },
+          },
+        ],
+      }
+    );
 
     this.userTable = userTable;
   }

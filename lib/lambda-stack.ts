@@ -19,10 +19,13 @@ export class LambdaStack extends cdk.Stack {
 
     const createUserLambda = new NodejsFunction(
       this,
-      generateResourceName('podologist-create-user-lambda'),
+      generateResourceName("create-user-lambda", scope),
       {
-        functionName: generateResourceName('podologist-create-user-lambda'),
-        entry: join(__dirname, "../src/user/app/register/create.ts"),
+        functionName: generateResourceName(
+          "create-user-lambda-funtion-name",
+          scope
+        ),
+        entry: join(__dirname, "../src/user/app/register/handler.ts"),
         handler: "handler",
         runtime: Runtime.NODEJS_22_X,
         environment: {

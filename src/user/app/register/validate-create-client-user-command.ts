@@ -1,80 +1,36 @@
 import { DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
-import { APIGatewayProxyResult } from "aws-lambda";
+import { CreateClientUserValidationResponse } from "../../domain";
+import { Repository } from "../../infrastructure/repository";
+
+const repository = new Repository();
 
 export const validateCreateClientUserCommand = async (
   client: DynamoDBClient,
   body: any
-): Promise<APIGatewayProxyResult | boolean> => {
-  if (!body) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Body is required",
-      }),
-    };
-  }
-  if (!body.name) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Name is required",
-      }),
-    };
-  }
-  if (!body.surname) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Surname is required",
-      }),
-    };
-  }
-  if (!body.email) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Email is required",
-      }),
-    };
-  }
-  if (!body.password) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Password is required",
-      }),
-    };
-  }
+): Promise<CreateClientUserValidationResponse> => {
+  const response = await repository.getByEmail(body.email);
 
-  const emailQuery = new QueryCommand({
-    TableName: process.env.USER_TABLE,
-    IndexName: "email-index",
-    KeyConditionExpression: "email = :email",
-    ExpressionAttributeValues: {
-      ":email": {
-        S: body.email,
-      },
-    },
-  });
-
-  const emailResponse = await client.send(emailQuery);
-  if (emailResponse.Items && emailResponse.Items.length > 0) {
+  if (response.Items && response.Items.length > 0) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Email already exists",
-      }),
+      result: false,
+      message: "Email already exists",
     };
   }
 
   if (body.password.length < 8) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Password must be at least 8 characters",
-      }),
+      result: false,
+      message: "Password must be at least 8 characters long",
+    };
+  }
+  if (!body || !body.name || !body.surname || !body.email || !body.password) {
+    return {
+      result: false,
+      message: "All fields are required",
     };
   }
 
-  return true;
+  return {
+    result: true,
+  };
 };
