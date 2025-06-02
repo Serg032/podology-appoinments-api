@@ -1,12 +1,14 @@
 import {
-  APIGatewayAuthorizerEvent,
   APIGatewayAuthorizerResult,
+  APIGatewayRequestAuthorizerEvent,
 } from "aws-lambda";
 
 export const handler = async (
-  event: APIGatewayAuthorizerEvent
+  event: APIGatewayRequestAuthorizerEvent
 ): Promise<APIGatewayAuthorizerResult> => {
   console.log("Auth Lambda", event);
+
+  console.log(event.headers, "event.authorizationToken");
 
   return {
     policyDocument: {

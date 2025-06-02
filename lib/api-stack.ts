@@ -1,5 +1,6 @@
 import * as cdk from "aws-cdk-lib";
 import {
+  IdentitySource,
   LambdaIntegration,
   RequestAuthorizer,
   RestApi,
@@ -20,12 +21,9 @@ export class ApiStack extends cdk.Stack {
 
     const authorizerLambda = new NodejsFunction(
       this,
-      generateResourceName("authorizer-lambda", scope),
+      generateResourceName("AuthorizerLambda", scope),
       {
-        functionName: generateResourceName(
-          "authorizer-lambda-function-name",
-          scope
-        ),
+        functionName: generateResourceName("AuthorizerLambda", scope),
         entry: join(__dirname, "../src/auth/index.ts"),
         handler: "handler",
         runtime: Runtime.NODEJS_22_X,
@@ -34,19 +32,23 @@ export class ApiStack extends cdk.Stack {
 
     const authorizer = new RequestAuthorizer(
       this,
-      generateResourceName("authorizer", scope),
+      generateResourceName("Authorizer", scope),
       {
         handler: authorizerLambda,
-        identitySources: ["method.request.header.x-user-token"],
+        identitySources: [IdentitySource.header("x-user-token")],
         authorizerName: generateResourceName("authorizer-name", scope),
       }
     );
 
-    const api = new RestApi(this, generateResourceName("api", scope), {
-      defaultMethodOptions: {
-        authorizer: authorizer,
-      },
-    });
+    const api = new RestApi(
+      this,
+      generateResourceName("podologist-api", scope),
+      {
+        defaultMethodOptions: {
+          authorizer: authorizer,
+        },
+      }
+    );
 
     const users = api.root.addResource("users");
 
