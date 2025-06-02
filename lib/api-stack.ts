@@ -21,9 +21,9 @@ export class ApiStack extends cdk.Stack {
 
     const authorizerLambda = new NodejsFunction(
       this,
-      generateResourceName("AuthorizerLambda", scope),
+      generateResourceName("authorizerLambda", "function"),
       {
-        functionName: generateResourceName("AuthorizerLambda", scope),
+        functionName: generateResourceName("authorizerLambda", "function"),
         entry: join(__dirname, "../src/auth/index.ts"),
         handler: "handler",
         runtime: Runtime.NODEJS_22_X,
@@ -32,23 +32,19 @@ export class ApiStack extends cdk.Stack {
 
     const authorizer = new RequestAuthorizer(
       this,
-      generateResourceName("Authorizer", scope),
+      generateResourceName("authorizer", "requestAuthorizer"),
       {
         handler: authorizerLambda,
         identitySources: [IdentitySource.header("x-user-token")],
-        authorizerName: generateResourceName("authorizer-name", scope),
+        authorizerName: generateResourceName("authorizer", "requestAuthorizer"),
       }
     );
 
-    const api = new RestApi(
-      this,
-      generateResourceName("podologist-api", scope),
-      {
-        defaultMethodOptions: {
-          authorizer: authorizer,
-        },
-      }
-    );
+    const api = new RestApi(this, generateResourceName("api", "restApi"), {
+      defaultMethodOptions: {
+        authorizer: authorizer,
+      },
+    });
 
     const users = api.root.addResource("users");
 

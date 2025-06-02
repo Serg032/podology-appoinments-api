@@ -12,9 +12,9 @@ export class TableStack extends cdk.Stack {
 
     const userTable = new TableV2(
       this,
-      generateResourceName("user-table", scope),
+      generateResourceName("userTable", "table"),
       {
-        tableName: generateResourceName("user-table-name", scope),
+        tableName: generateResourceName("userTable", "table"),
         partitionKey: {
           name: "id",
           type: AttributeType.STRING,

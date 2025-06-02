@@ -1,7 +1,8 @@
 import { Construct } from "constructs";
 
-export const generateResourceName = (name: string, scope: Construct) => {
-  const env = process.env.ENV || "dev"; // Entorno (dev, staging, prod)
-  const resourceName = `Podologist-api-${name}-${env}-${scope.node.id}`;
+export const generateResourceName = (name: string, resourceType: string) => {
+  const projectName = process.env.PROJECT_NAME || "podologist"; // Nombre del proyecto
+  const stage = process.env.ENV || "dev"; // Entorno (dev, staging, prod)
+  const resourceName = `${projectName}-${stage}-${resourceType}-${name}`;
   return resourceName;
 };
