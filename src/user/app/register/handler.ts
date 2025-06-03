@@ -3,12 +3,30 @@ import { Repository } from "../../infrastructure/repository";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import * as bcrypt from "bcryptjs";
 
-const repository = new Repository();
-
 export const handler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   try {
+    console.log(
+      "Event received:",
+      event,
+      "Table Name:",
+      process.env.USER_TABLE_NAME
+    );
+
+    const tableName = process.env.USER_TABLE_NAME;
+    if (!tableName) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+          message: "USER_TABLE_NAME environment variable is not set",
+        }),
+      };
+    }
+
+    // Initialize the repository with the table name
+    const repository = new Repository(tableName);
+
     const body = event.body;
 
     if (!body) {

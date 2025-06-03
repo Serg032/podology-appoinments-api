@@ -28,6 +28,7 @@ export class TableStack extends cdk.Stack {
             },
           },
         ],
+        removalPolicy: cdk.RemovalPolicy.DESTROY, // Use DESTROY for development, change to RETAIN for production
       }
     );
 

@@ -13,6 +13,7 @@ interface LambdaStackProps extends cdk.StackProps {
 
 export class LambdaStack extends cdk.Stack {
   public readonly createUserLambda: NodejsFunction;
+  public readonly getUserByIdLambda: NodejsFunction;
 
   constructor(scope: Construct, id: string, props: LambdaStackProps) {
     super(scope, id, props);
@@ -26,13 +27,29 @@ export class LambdaStack extends cdk.Stack {
         handler: "handler",
         runtime: Runtime.NODEJS_22_X,
         environment: {
-          USER_TABLE: props.userTable.tableName,
+          USER_TABLE_NAME: props.userTable.tableName,
+        },
+      }
+    );
+
+    const getUserByIdLambda = new NodejsFunction(
+      this,
+      generateResourceName("getUserById", "function"),
+      {
+        functionName: generateResourceName("getUserById", "function"),
+        entry: join(__dirname, "../src/user/app/get-by-id/handler.ts"),
+        handler: "handler",
+        runtime: Runtime.NODEJS_22_X,
+        environment: {
+          USER_TABLE_NAME: props.userTable.tableName,
         },
       }
     );
 
     props.userTable.grantReadWriteData(createUserLambda);
+    props.userTable.grantReadData(getUserByIdLambda);
 
     this.createUserLambda = createUserLambda;
+    this.getUserByIdLambda = getUserByIdLambda;
   }
 }

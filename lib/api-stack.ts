@@ -13,6 +13,7 @@ import { Runtime } from "aws-cdk-lib/aws-lambda";
 
 interface ApiStackProps extends cdk.StackProps {
   createUserLambda: NodejsFunction;
+  getUserByIdLambda: NodejsFunction;
 }
 
 export class ApiStack extends cdk.Stack {
@@ -47,7 +48,9 @@ export class ApiStack extends cdk.Stack {
     });
 
     const users = api.root.addResource("users");
+    const user = users.addResource("{id}");
 
     users.addMethod("POST", new LambdaIntegration(props.createUserLambda));
+    user.addMethod("GET", new LambdaIntegration(props.getUserByIdLambda));
   }
 }

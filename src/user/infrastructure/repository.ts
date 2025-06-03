@@ -9,15 +9,19 @@ import { CreateClientUserCommand, UserType } from "../domain";
 
 export class Repository {
   private dbClient: DynamoDBClient;
-  constructor() {
+  private userTableName: string;
+
+  constructor(userTableName: string) {
     this.dbClient = new DynamoDBClient();
+    this.userTableName = userTableName;
+    console.log("Repository initialized with table name:", this.userTableName);
   }
   async createClient(
     command: CreateClientUserCommand
   ): Promise<PutItemCommandOutput> {
     return await this.dbClient.send(
       new PutItemCommand({
-        TableName: process.env.USER_TABLE,
+        TableName: this.userTableName,
         Item: {
           id: {
             S: randomUUID(),
@@ -44,7 +48,7 @@ export class Repository {
 
   async getByEmail(email: string) {
     const emailQuery = new QueryCommand({
-      TableName: process.env.USER_TABLE,
+      TableName: this.userTableName,
       IndexName: "email-index",
       KeyConditionExpression: "email = :email",
       ExpressionAttributeValues: {

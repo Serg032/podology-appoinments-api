@@ -1,12 +1,20 @@
 import { CreateClientUserValidationResponse } from "../../domain";
 import { Repository } from "../../infrastructure/repository";
 
-const repository = new Repository();
-
 export const validateCreateClientUserCommand = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: any
 ): Promise<CreateClientUserValidationResponse> => {
+  const tableName = process.env.USER_TABLE_NAME;
+
+  if (!tableName) {
+    return {
+      result: false,
+      message: "USER_TABLE_NAME environment variable is not set",
+    };
+  }
+  const repository = new Repository(tableName);
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(body.email)) {
     return {
