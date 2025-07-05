@@ -7,13 +7,6 @@ export const handler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   try {
-    console.log(
-      "Event received:",
-      event,
-      "Table Name:",
-      process.env.USER_TABLE_NAME
-    );
-
     const tableName = process.env.USER_TABLE_NAME;
     if (!tableName) {
       return {
@@ -45,7 +38,6 @@ export const handler = async (
     );
 
     if (validationResponse.result === false) {
-      console.log("Validation failed", validationResponse);
       return {
         statusCode: 400,
         body: JSON.stringify({

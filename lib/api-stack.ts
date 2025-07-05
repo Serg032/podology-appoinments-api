@@ -47,6 +47,10 @@ export class ApiStack extends cdk.Stack {
       },
     });
 
+    api.root.addCorsPreflight({
+      allowOrigins: ["*"],
+    });
+
     const users = api.root.addResource("users");
     const user = users.addResource("{id}");
 
