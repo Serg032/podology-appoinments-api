@@ -11,6 +11,10 @@ export default defineConfig([
     rules: {
       "no-unused-vars": "error", // Marca como error cualquier variable no usada
       "@typescript-eslint/no-unused-vars": "error", // Para TypeScript
+      "padding-line-between-statements": [
+        "error",
+        { blankLine: "always", prev: "*", next: "return" },
+      ],
     },
   },
   {
