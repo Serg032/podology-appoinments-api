@@ -6,9 +6,18 @@ export const handler = async (
   repository: Repository,
   command: CreateUserCommand
 ): Promise<User> => {
-  const existedUser = await repository.getByEmail(command.email);
+  await repository.getByEmail(command.email);
 
   User.confirmPassword(command.password, command.repeatedPassword);
+
+  const createUser = await repository.save({
+    name: command.name,
+    surname: command.surname,
+    email: command.email,
+    password: command.password,
+    repeatedPassword: command.repeatedPassword,
+    type: command.type,
+  });
 
   return new User(
     randomUUID(),

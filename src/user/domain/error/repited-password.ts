@@ -1,8 +1,5 @@
-export class RepitedPasswordError implements Error {
-  name: string;
-  message: string;
+export class RepitedPasswordError extends Error {
   constructor() {
-    this.name = "Repited Password Error";
-    this.message = "Repited password does`t match password";
+    super("Repited password does`t match password");
   }
 }
