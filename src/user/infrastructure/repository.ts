@@ -3,8 +3,7 @@ import {
   PutItemCommand,
   QueryCommand,
 } from "@aws-sdk/client-dynamodb";
-import { randomUUID } from "crypto";
-import { CreateUserCommand, User, UserType } from "../domain";
+import { User, UserType } from "../domain";
 import { Repository } from "../domain/repository-interface";
 import { MoreThanOneUserWithSameEmail } from "../domain/error/user-with-same-email";
 
@@ -18,33 +17,35 @@ export class DynamoDbRepository implements Repository {
     console.log("Repository initialized with table name:", this.tableName);
   }
 
-  public async save(command: CreateUserCommand) {
+  public async save(user: User) {
     try {
       await this.dbClient.send(
         new PutItemCommand({
           TableName: this.tableName,
           Item: {
             id: {
-              S: randomUUID(),
+              S: user.id,
             },
             name: {
-              S: command.name,
+              S: user.name,
             },
             surname: {
-              S: command.surname,
+              S: user.surname,
             },
             email: {
-              S: command.email,
+              S: user.email,
             },
             password: {
-              S: command.password,
+              S: user.password,
             },
             type: {
-              S: command.type,
+              S: user.type,
             },
           },
         })
       );
+
+      return user;
     } catch (error) {
       console.error(error);
       throw new Error(

@@ -1,3 +1,4 @@
+import { PasswordMinimumLengthError } from "./error/password-minimun-length";
 import { RepitedPasswordError } from "./error/repited-password";
 
 export enum UserType {
@@ -24,12 +25,12 @@ export interface RegisterResponse extends User {
 }
 
 export class User {
-  private readonly id: string;
-  private readonly name: string;
-  private readonly surname: string;
-  private readonly email: string;
-  private readonly password: string;
-  private readonly type: UserType;
+  public readonly id: string;
+  public readonly name: string;
+  public readonly surname: string;
+  public readonly email: string;
+  public readonly password: string;
+  public readonly type: UserType;
 
   constructor(
     id: string,
@@ -39,6 +40,8 @@ export class User {
     password: string,
     type: UserType
   ) {
+    this.ensurePasswordMinimumLength(password);
+
     this.id = id;
     this.name = name;
     this.surname = surname;
@@ -50,6 +53,12 @@ export class User {
   static confirmPassword(password: string, repitedPassword: string) {
     if (password !== repitedPassword) {
       throw new RepitedPasswordError();
+    }
+  }
+
+  private ensurePasswordMinimumLength(password: string) {
+    if (password.length < 8) {
+      throw new PasswordMinimumLengthError();
     }
   }
 }
