@@ -31,8 +31,6 @@ describe("When getting a user by email", () => {
     it("should return undefined", () => {
       const undefinedUser = handler(repository, "not exists");
 
-      console.log(undefinedUser);
-
       expect(undefinedUser).toBeUndefined();
     });
   });
