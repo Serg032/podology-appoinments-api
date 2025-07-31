@@ -1,7 +1,7 @@
 import { CreateUserCommand, User, UserType } from "../../src/user/domain";
 import { handler as create } from "../../src/user/app/create/handler";
 import { RepositoryInMemory } from "../../src/user/infrastructure/repository-in-memory";
-import { handler } from "../../src/user/app/get-by-id/handler";
+import { handler } from "../../src/user/app/get-by-email/handler";
 
 const repository = new RepositoryInMemory();
 

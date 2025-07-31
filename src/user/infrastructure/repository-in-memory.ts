@@ -12,7 +12,7 @@ export class RepositoryInMemory implements Repository {
     return user;
   }
 
-  getByEmail(email: string): User | undefined {
+  async getByEmail(email: string): Promise<User | undefined> {
     return this.users.find((user) => user.email === email);
   }
 }

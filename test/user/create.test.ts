@@ -50,7 +50,7 @@ describe("When creating a user", () => {
     const notEnoughPasswordCreateCommand: CreateUserCommand = {
       name: "Alana",
       surname: "La Rana",
-      email: "alanalara@test.com",
+      email: "alanalarana@test.com",
       password: "1234567",
       repeatedPassword: "1234567",
       type: UserType.client,
@@ -63,20 +63,20 @@ describe("When creating a user", () => {
     });
   });
 
-  // describe("and there is a user with the same email registered", () => {
-  //   const createAlreadyRegisteredUser: CreateUserCommand = {
-  //     name: "John",
-  //     surname: "Doe",
-  //     email: "johndoe@test.com",
-  //     password: "12345678",
-  //     repeatedPassword: "12345678",
-  //     type: UserType.client,
-  //   };
+  describe("and there is a user with the same email registered", () => {
+    const createAlreadyRegisteredUser: CreateUserCommand = {
+      name: "John",
+      surname: "Doe",
+      email: "johndoe@test.com",
+      password: "12345678",
+      repeatedPassword: "12345678",
+      type: UserType.client,
+    };
 
-  //   beforeEach(() => {
-  //     await create(repository, createAlreadyRegisteredUser);
-  //   });
+    beforeEach(async () => {
+      await create(repository, createAlreadyRegisteredUser);
+    });
 
-  //   it("should throw an error", () => {});
-  // });
+    it("should throw an error", () => {});
+  });
 });

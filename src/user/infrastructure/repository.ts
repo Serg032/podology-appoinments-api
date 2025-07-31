@@ -70,18 +70,6 @@ export class DynamoDbRepository implements Repository {
         )
       ).Items ?? [];
 
-    if (response.length === 0) {
-      return;
-    }
-
-    if (response.length > 1) {
-      throw new MoreThanOneUserWithSameEmail(email);
-    }
-
-    const unmarshalledResponse = response[0];
-
-    console.log(unmarshalledResponse);
-
-    return new User("1", "1", "1", "1", "1", UserType.client);
+    return response;
   }
 }
