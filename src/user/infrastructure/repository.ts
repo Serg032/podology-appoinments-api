@@ -1,75 +1,74 @@
-import {
-  DynamoDBClient,
-  PutItemCommand,
-  QueryCommand,
-} from "@aws-sdk/client-dynamodb";
-import { User, UserType } from "../domain";
-import { Repository } from "../domain/repository-interface";
-import { MoreThanOneUserWithSameEmail } from "../domain/error/user-with-same-email";
+// import {
+//   DynamoDBClient,
+//   PutItemCommand,
+//   QueryCommand,
+// } from "@aws-sdk/client-dynamodb";
+// import { User } from "../domain";
+// import { Repository } from "../domain/repository-interface";
 
-export class DynamoDbRepository implements Repository {
-  private dbClient: DynamoDBClient;
-  private tableName: string;
+// export class DynamoDbRepository implements Repository {
+//   private dbClient: DynamoDBClient;
+//   private tableName: string;
 
-  constructor(userTableName: string) {
-    this.dbClient = new DynamoDBClient();
-    this.tableName = userTableName;
-    console.log("Repository initialized with table name:", this.tableName);
-  }
+//   constructor(userTableName: string) {
+//     this.dbClient = new DynamoDBClient();
+//     this.tableName = userTableName;
+//     console.log("Repository initialized with table name:", this.tableName);
+//   }
 
-  public async save(user: User) {
-    try {
-      await this.dbClient.send(
-        new PutItemCommand({
-          TableName: this.tableName,
-          Item: {
-            id: {
-              S: user.id,
-            },
-            name: {
-              S: user.name,
-            },
-            surname: {
-              S: user.surname,
-            },
-            email: {
-              S: user.email,
-            },
-            password: {
-              S: user.password,
-            },
-            type: {
-              S: user.type,
-            },
-          },
-        })
-      );
+//   public async save(user: User) {
+//     try {
+//       await this.dbClient.send(
+//         new PutItemCommand({
+//           TableName: this.tableName,
+//           Item: {
+//             id: {
+//               S: user.id,
+//             },
+//             name: {
+//               S: user.name,
+//             },
+//             surname: {
+//               S: user.surname,
+//             },
+//             email: {
+//               S: user.email,
+//             },
+//             password: {
+//               S: user.password,
+//             },
+//             type: {
+//               S: user.type,
+//             },
+//           },
+//         })
+//       );
 
-      return user;
-    } catch (error) {
-      console.error(error);
-      throw new Error(
-        `Error saving user in DynamoDb ${(error as Error).message}`
-      );
-    }
-  }
+//       return user;
+//     } catch (error) {
+//       console.error(error);
+//       throw new Error(
+//         `Error saving user in DynamoDb ${(error as Error).message}`
+//       );
+//     }
+//   }
 
-  public async getByEmail(email: string): Promise<User | undefined> {
-    const response =
-      (
-        await this.dbClient.send(
-          new QueryCommand({
-            TableName: this.tableName,
-            KeyConditionExpression: "email-index = email",
-            ExpressionAttributeValues: {
-              email: {
-                S: email,
-              },
-            },
-          })
-        )
-      ).Items ?? [];
+//   public async getByEmail(email: string): Promise<User | undefined> {
+//     const response =
+//       (
+//         await this.dbClient.send(
+//           new QueryCommand({
+//             TableName: this.tableName,
+//             KeyConditionExpression: "email-index = email",
+//             ExpressionAttributeValues: {
+//               email: {
+//                 S: email,
+//               },
+//             },
+//           })
+//         )
+//       ).Items ?? [];
 
-    return response;
-  }
-}
+//     return response;
+//   }
+// }

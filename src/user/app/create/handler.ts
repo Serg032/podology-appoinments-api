@@ -1,21 +1,10 @@
-import { randomUUID } from "crypto";
-import { CreateUserCommand, User } from "../../domain";
 import { Repository } from "../../domain/repository-interface";
+import { CreateCommand } from "../../domain";
 
-export const handler = async (
-  repository: Repository,
-  command: CreateUserCommand
-): Promise<User> => {
-  User.confirmPassword(command.password, command.repeatedPassword);
+export class Handler {
+  constructor(private repository: Repository) {}
 
-  const user = new User(
-    randomUUID(),
-    command.name,
-    command.surname,
-    command.email,
-    command.password,
-    command.type
-  );
-
-  return await repository.save(user);
-};
+  async handle(command: CreateCommand) {
+    return await this.repository.save(command);
+  }
+}

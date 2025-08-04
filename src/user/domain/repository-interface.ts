@@ -1,6 +1,7 @@
-import { User } from ".";
+import { CreateCommand, UserDto } from ".";
 
 export abstract class Repository {
-  abstract save(user: User): Promise<User>;
-  abstract getByEmail(email: string): Promise<User | undefined>;
+  abstract save(command: CreateCommand): Promise<void>;
+  abstract getById(id: string): Promise<UserDto | undefined>;
+  abstract getByEmail(email: string): Promise<UserDto | undefined>;
 }
