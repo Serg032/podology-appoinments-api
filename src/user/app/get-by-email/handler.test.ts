@@ -5,7 +5,7 @@ import { UserType } from "../../domain/entity";
 import { Handler as CreateHandler } from "../create/handler";
 import { Handler } from "./handler";
 
-describe("When getting a toBeby email", () => {
+describe("When getting a user by email", () => {
   const repository = new RepositoryInMemory();
   const createHandler = new CreateHandler(repository);
   const handler = new Handler(repository);

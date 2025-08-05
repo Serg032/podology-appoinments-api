@@ -18,13 +18,12 @@ export class LambdaStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: LambdaStackProps) {
     super(scope, id, props);
 
-    const createUserLambda = new NodejsFunction(
+    const registerUserLambda = new NodejsFunction(
       this,
-      generateResourceName("createUser", "function"),
+      generateResourceName("registerUser", "function"),
       {
-        functionName: generateResourceName("createUser", "function"),
-        entry: join(__dirname, "../src/user/app/register/handler.ts"),
-        handler: "handler",
+        functionName: generateResourceName("registerUser", "function"),
+        entry: join(__dirname, "../src/app/user/register.ts"),
         runtime: Runtime.NODEJS_22_X,
         environment: {
           USER_TABLE_NAME: props.userTable.tableName,
@@ -37,8 +36,7 @@ export class LambdaStack extends cdk.Stack {
       generateResourceName("getUserById", "function"),
       {
         functionName: generateResourceName("getUserById", "function"),
-        entry: join(__dirname, "../src/user/app/get-by-id/handler.ts"),
-        handler: "handler",
+        entry: join(__dirname, "../src/app/user/get-by-id.ts"),
         runtime: Runtime.NODEJS_22_X,
         environment: {
           USER_TABLE_NAME: props.userTable.tableName,
@@ -46,10 +44,10 @@ export class LambdaStack extends cdk.Stack {
       }
     );
 
-    props.userTable.grantReadWriteData(createUserLambda);
+    props.userTable.grantReadWriteData(registerUserLambda);
     props.userTable.grantReadData(getUserByIdLambda);
 
-    this.createUserLambda = createUserLambda;
+    this.createUserLambda = registerUserLambda;
     this.getUserByIdLambda = getUserByIdLambda;
   }
 }
