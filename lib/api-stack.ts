@@ -54,7 +54,9 @@ export class ApiStack extends cdk.Stack {
     const users = api.root.addResource("users");
     const user = users.addResource("{id}");
 
-    users.addMethod("POST", new LambdaIntegration(props.createUserLambda));
+    users.addMethod("POST", new LambdaIntegration(props.createUserLambda), {
+      authorizer: undefined,
+    });
     user.addMethod("GET", new LambdaIntegration(props.getUserByIdLambda));
   }
 }

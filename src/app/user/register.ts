@@ -17,10 +17,13 @@ export const handler = async (
 ): Promise<APIGatewayProxyResult> => {
   try {
     const body = event.body;
+
     if (!body) {
       throw new Error("There's no body");
     }
+
     const parsedBody = JSON.parse(body) as CreateCommand;
+    
     console.log("EVENT BODY: ", parsedBody);
 
     await createHandler.handle(parsedBody);
