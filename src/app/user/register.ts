@@ -43,8 +43,6 @@ export const handler = async (
     };
   } catch (error) {
     if (error instanceof CustomError) {
-      console.log("CUSTOM ERROR", error, error.toJson());
-
       return {
         statusCode: error.statusCode,
         headers: {
@@ -53,8 +51,6 @@ export const handler = async (
         body: JSON.stringify((error as CustomError).toJson()),
       };
     }
-
-    console.log("NO Custom ERROR", error);
 
     return {
       statusCode: 500,

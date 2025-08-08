@@ -5,7 +5,7 @@ import {
   QueryCommand,
 } from "@aws-sdk/client-dynamodb";
 import { Repository } from "../domain/repository-interface";
-import { CreateCommand, UserDto } from "../domain";
+import { UserDto } from "../domain";
 import { User } from "../domain/entity";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
@@ -18,18 +18,8 @@ export class DynamoDbRepository implements Repository {
     this.tableName = userTableName;
   }
 
-  public async save(command: CreateCommand) {
+  public async save(user: User) {
     try {
-      const user = new User(
-        command.id,
-        command.name,
-        command.surname,
-        command.email,
-        command.password,
-        command.type,
-        command.repeatedPassword
-      );
-
       await this.dbClient.send(
         new PutItemCommand({
           TableName: this.tableName,
@@ -38,13 +28,13 @@ export class DynamoDbRepository implements Repository {
               S: user.id,
             },
             name: {
-              S: user.name,
+              S: this.capitalizeFirstLetter(user.name),
             },
             surname: {
-              S: user.surname,
+              S: this.capitalizeFirstLetter(user.surname),
             },
             email: {
-              S: user.email,
+              S: user.email.toLocaleLowerCase().trim(),
             },
             password: {
               S: user.password,
@@ -124,5 +114,10 @@ export class DynamoDbRepository implements Repository {
       type: unmarshalledItem.type,
       password: unmarshalledItem.password,
     };
+  }
+  private capitalizeFirstLetter(str: string) {
+    return (
+      str.charAt(0).toLocaleUpperCase() + str.slice(1).toLocaleLowerCase()
+    ).trim();
   }
 }

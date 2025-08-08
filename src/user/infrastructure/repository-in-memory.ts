@@ -1,4 +1,4 @@
-import { CreateCommand, UserDto } from "../domain";
+import { UserDto } from "../domain";
 import { User } from "../domain/entity";
 import { Repository } from "../domain/repository-interface";
 
@@ -7,18 +7,17 @@ export class RepositoryInMemory implements Repository {
 
   constructor() {}
 
-  async save(command: CreateCommand): Promise<void> {
-    const user = new User(
-      command.id,
-      command.name,
-      command.surname,
-      command.email,
-      command.password,
-      command.type,
-      command.repeatedPassword
+  async save(user: User): Promise<void> {
+    this.users.push(
+      new User(
+        user.id,
+        user.name,
+        user.surname,
+        user.email,
+        user.password,
+        user.type
+      )
     );
-
-    this.users.push(user);
   }
 
   async getById(id: string): Promise<UserDto | undefined> {

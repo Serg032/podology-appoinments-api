@@ -8,6 +8,6 @@ export class PasswordMinimumLengthError extends CustomError {
     super();
     this.statusCode = 400;
     this.message = "Password needs to be 8 length";
-    Object.setPrototypeOf(this, PasswordMinimumLengthError);
+    Object.setPrototypeOf(this, PasswordMinimumLengthError.prototype);
   }
 }

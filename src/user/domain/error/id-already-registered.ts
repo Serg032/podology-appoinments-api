@@ -8,6 +8,6 @@ export class IdAlreadyRegistered extends CustomError {
     super(id);
     this.statusCode = 409;
     this.message = `Id ${id} already registered`;
-    Object.setPrototypeOf(this, IdAlreadyRegistered);
+    Object.setPrototypeOf(this, IdAlreadyRegistered.prototype);
   }
 }

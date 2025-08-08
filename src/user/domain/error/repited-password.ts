@@ -8,6 +8,6 @@ export class RepitedPasswordError extends CustomError {
     super();
     this.statusCode = 400;
     this.message = "Repited password and pasword don't match";
-    Object.setPrototypeOf(this, RepitedPasswordError);
+    Object.setPrototypeOf(this, RepitedPasswordError.prototype);
   }
 }

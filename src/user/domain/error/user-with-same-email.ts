@@ -8,6 +8,6 @@ export class MoreThanOneUserWithSameEmail extends CustomError {
     super(email);
     this.statusCode = 409;
     this.message = `There are more than one user with the same email: ${email}`;
-    Object.setPrototypeOf(this, MoreThanOneUserWithSameEmail);
+    Object.setPrototypeOf(this, MoreThanOneUserWithSameEmail.prototype);
   }
 }

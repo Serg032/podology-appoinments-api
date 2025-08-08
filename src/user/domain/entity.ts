@@ -1,7 +1,4 @@
 import { UserDto } from ".";
-import { EmailNotWellFormed } from "./error/email-not-well-formed";
-import { PasswordMinimumLengthError } from "./error/password-minimun-length";
-import { RepitedPasswordError } from "./error/repited-password";
 
 export enum UserType {
   admin = "ADMIN",
@@ -22,37 +19,14 @@ export class User {
     surname: string,
     email: string,
     password: string,
-    type: UserType,
-    repetedPassword?: string
+    type: UserType
   ) {
-    this.ensureRepeatedPasswordMatch(password, repetedPassword);
-    this.ensurePasswordMinimumLength(password);
-    this.ensureEmail(email);
-
     this.id = id;
     this.name = name;
     this.surname = surname;
     this.email = email;
     this.password = password;
     this.type = type;
-  }
-
-  private ensureRepeatedPasswordMatch(
-    password: string,
-    repeatedPassword?: string
-  ) {
-    if (repeatedPassword && password !== repeatedPassword)
-      throw new RepitedPasswordError();
-  }
-
-  private ensurePasswordMinimumLength(password: string) {
-    if (password.length < 8) throw new PasswordMinimumLengthError();
-  }
-
-  private ensureEmail(email: string) {
-    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!EMAIL_REGEX.test(email)) throw new EmailNotWellFormed(email);
   }
 
   public toUserDto(): UserDto {
