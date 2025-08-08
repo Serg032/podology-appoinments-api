@@ -1,5 +1,6 @@
 import * as cdk from "aws-cdk-lib";
 import {
+  Cors,
   IdentitySource,
   LambdaIntegration,
   RequestAuthorizer,
@@ -42,21 +43,20 @@ export class ApiStack extends cdk.Stack {
     );
 
     const api = new RestApi(this, generateResourceName("api", "restApi"), {
-      defaultMethodOptions: {
-        authorizer: authorizer,
+      defaultCorsPreflightOptions: {
+        allowOrigins: Cors.ALL_ORIGINS,
+        allowMethods: Cors.ALL_METHODS,
       },
-    });
-
-    api.root.addCorsPreflight({
-      allowOrigins: ["*"],
     });
 
     const users = api.root.addResource("users");
     const user = users.addResource("{id}");
 
     users.addMethod("POST", new LambdaIntegration(props.createUserLambda), {
-      authorizer: undefined,
+      // authorizer: undefined,
     });
-    user.addMethod("GET", new LambdaIntegration(props.getUserByIdLambda));
+    user.addMethod("GET", new LambdaIntegration(props.getUserByIdLambda), {
+      authorizer,
+    });
   }
 }

@@ -23,19 +23,41 @@ export const handler = async (
     }
 
     const parsedBody = JSON.parse(body) as CreateCommand;
-    
+
+    validateCreateCommand(parsedBody);
+
     console.log("EVENT BODY: ", parsedBody);
 
     await createHandler.handle(parsedBody);
 
     return {
       statusCode: 201,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: "User created",
     };
   } catch (error) {
     return {
       statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: JSON.stringify((error as Error).message),
     };
+  }
+
+  function validateCreateCommand(command: Partial<CreateCommand>) {
+    if (
+      !command.id ||
+      !command.name ||
+      !command.surname ||
+      !command.email ||
+      !command.password ||
+      !command.repeatedPassword ||
+      !command.type
+    ) {
+      throw new Error("All fields are required.");
+    }
   }
 };
