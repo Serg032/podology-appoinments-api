@@ -8,14 +8,17 @@ import { Repository } from "../domain/repository-interface";
 import { UserDto } from "../domain";
 import { User } from "../domain/entity";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { PasswordHasher } from "../../auth/infrastructure/password-hasher";
 
 export class DynamoDbRepository implements Repository {
   private dbClient: DynamoDBClient;
   private tableName: string;
+  private passwordHaser: PasswordHasher;
 
   constructor(userTableName: string) {
     this.dbClient = new DynamoDBClient();
     this.tableName = userTableName;
+    this.passwordHaser = new PasswordHasher();
   }
 
   public async save(user: User) {
@@ -37,7 +40,7 @@ export class DynamoDbRepository implements Repository {
               S: user.email.toLocaleLowerCase().trim(),
             },
             password: {
-              S: user.password,
+              S: await this.passwordHaser.hash(user.password),
             },
             type: {
               S: user.type,
