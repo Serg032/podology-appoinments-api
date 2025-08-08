@@ -11,7 +11,7 @@ describe("When getting a user by email", () => {
   const handler = new Handler(repository);
   const email = "johndoe@test.com";
 
-  const userDto: CreateCommand = {
+  const command: CreateCommand = {
     id: randomUUID(),
     name: "John",
     surname: "Doe",
@@ -22,7 +22,7 @@ describe("When getting a user by email", () => {
   };
 
   beforeAll(async () => {
-    await createHandler.handle(userDto);
+    await createHandler.handle(command);
   });
   it("should be retrieved", async () => {
     const user = await handler.handle(email);

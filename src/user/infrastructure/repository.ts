@@ -115,6 +115,7 @@ export class DynamoDbRepository implements Repository {
       password: unmarshalledItem.password,
     };
   }
+
   private capitalizeFirstLetter(str: string) {
     return (
       str.charAt(0).toLocaleUpperCase() + str.slice(1).toLocaleLowerCase()
