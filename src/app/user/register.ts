@@ -39,7 +39,7 @@ export const handler = async (
       headers: {
         "Access-Control-Allow-Origin": "*",
       },
-      body: "User created",
+      body: JSON.stringify({ message: "User created" }),
     };
   } catch (error) {
     if (error instanceof CustomError) {
