@@ -1,5 +1,5 @@
 {
-  "name": "podologist-appointments-api",
+  "name": "podologist-authentication-service",
   "version": "0.1.0",
   "bin": {
     "api": "bin/podologist-appointments-api.js"
