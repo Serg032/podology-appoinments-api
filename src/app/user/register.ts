@@ -2,6 +2,8 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { Handler } from "../../user/app/create/handler";
 import { DynamoDbRepository } from "../../user/infrastructure/repository";
 import { CreateCommand } from "../../user/domain";
+import { CustomError } from "../../user/domain/error/index.interface";
+import { AllFieldsRequired } from "../../user/domain/error/all-field-required";
 
 const tableName = process.env.USER_TABLE_NAME;
 
@@ -28,7 +30,9 @@ export const handler = async (
 
     console.log("EVENT BODY: ", parsedBody);
 
-    await createHandler.handle(parsedBody);
+    const handlerResponse = await createHandler.handle(parsedBody);
+
+    console.log("Handler Response", handlerResponse);
 
     return {
       statusCode: 201,
@@ -38,12 +42,26 @@ export const handler = async (
       body: "User created",
     };
   } catch (error) {
+    if (error instanceof CustomError) {
+      console.log("CUSTOM ERROR", error, error.toJson());
+
+      return {
+        statusCode: error.statusCode,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify((error as CustomError).toJson()),
+      };
+    }
+
+    console.log("NO Custom ERROR", error);
+
     return {
       statusCode: 500,
       headers: {
         "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify((error as Error).message),
+      body: JSON.stringify({ message: "Internal server error" }),
     };
   }
 
@@ -57,7 +75,7 @@ export const handler = async (
       !command.repeatedPassword ||
       !command.type
     ) {
-      throw new Error("All fields are required.");
+      throw new AllFieldsRequired();
     }
   }
 };

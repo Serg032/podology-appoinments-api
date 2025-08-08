@@ -6,8 +6,9 @@ import { Handler } from "../create/handler";
 import { Handler as GetByIdHandler } from "../get-by-id/handler";
 import { RepitedPasswordError } from "../../domain/error/repited-password";
 import { PasswordMinimumLengthError } from "../../domain/error/password-minimun-length";
-import { EmailAlreadyRegistered } from "../../domain/error/email-already-registered";
 import { IdAlreadyRegistered } from "../../domain/error/id-already-registered";
+import { EmailNotWellFormed } from "../../domain/error/email-not-well-formed";
+import { EmailAlreadyRegistered } from "../../domain/error/email-already-registered";
 
 describe("When creating a user", () => {
   const repository = new RepositoryInMemory();
@@ -48,7 +49,7 @@ describe("When creating a user", () => {
 
     it("shuoldn't be created", async () => {
       await expect(handler.handle(createCommand)).rejects.toThrow(
-        IdAlreadyRegistered
+        new IdAlreadyRegistered(createCommand.id)
       );
     });
   });
@@ -65,7 +66,7 @@ describe("When creating a user", () => {
     };
     it("should throw an specific error", async () => {
       await expect(handler.handle(invalidCommand)).rejects.toThrow(
-        RepitedPasswordError
+        new RepitedPasswordError()
       );
     });
   });
@@ -82,7 +83,7 @@ describe("When creating a user", () => {
     };
     it("should throw an specific error", async () => {
       await expect(handler.handle(invalidCommand)).rejects.toThrow(
-        PasswordMinimumLengthError
+        new PasswordMinimumLengthError()
       );
     });
   });
@@ -100,7 +101,25 @@ describe("When creating a user", () => {
       };
 
       await expect(handler.handle(createCommand)).rejects.toThrow(
-        EmailAlreadyRegistered
+        new EmailAlreadyRegistered(createCommand.email)
+      );
+    });
+  });
+
+  describe("and the email address is not well formed", () => {
+    it("should throw a specific error", async () => {
+      const createCommand: CreateCommand = {
+        id: "388bab68-f7de-462e-aa4a-d4d7cd6dbd9c",
+        name: "John",
+        surname: "Doe",
+        email: "johndoesafasdasdasd",
+        password: "12345678",
+        type: UserType.client,
+        repeatedPassword: "12345678",
+      };
+
+      await expect(handler.handle(createCommand)).rejects.toThrow(
+        new EmailNotWellFormed(createCommand.email)
       );
     });
   });

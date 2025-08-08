@@ -1,5 +1,13 @@
-export class RepitedPasswordError extends Error {
+import { CustomError, ErrorCode } from "./index.interface";
+
+export class RepitedPasswordError extends CustomError {
+  code = ErrorCode.REPITEDPASSWORD_DONT_MATCH;
+  statusCode: number;
+
   constructor() {
-    super("Repited password does`t match password");
+    super();
+    this.statusCode = 400;
+    this.message = "Repited password and pasword don't match";
+    Object.setPrototypeOf(this, RepitedPasswordError);
   }
 }
