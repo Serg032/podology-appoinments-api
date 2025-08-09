@@ -14,9 +14,12 @@ interface LambdaStackProps extends cdk.StackProps {
 export class LambdaStack extends cdk.Stack {
   public readonly createUserLambda: NodejsFunction;
   public readonly getUserByIdLambda: NodejsFunction;
+  private jwtPrivateKeyName: string;
 
   constructor(scope: Construct, id: string, props: LambdaStackProps) {
     super(scope, id, props);
+
+    this.jwtPrivateKeyName = "/podologist-authentication-service/jwt-secret";
 
     const registerUserLambda = new NodejsFunction(
       this,
@@ -27,6 +30,7 @@ export class LambdaStack extends cdk.Stack {
         runtime: Runtime.NODEJS_22_X,
         environment: {
           USER_TABLE_NAME: props.userTable.tableName,
+          JWT_SECRET_PARAMETER_NAME: this.jwtPrivateKeyName,
         },
       }
     );
