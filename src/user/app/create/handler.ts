@@ -3,8 +3,6 @@ import { CreateCommand } from "../../domain";
 import { EmailAlreadyRegistered } from "../../domain/error/email-already-registered";
 import { IdAlreadyRegistered } from "../../domain/error/id-already-registered";
 import { ErrorData } from "../../domain/error/index.interface";
-import { RepitedPasswordError } from "../../domain/error/repited-password";
-import { PasswordMinimumLengthError } from "../../domain/error/password-minimun-length";
 import { EmailNotWellFormed } from "../../domain/error/email-not-well-formed";
 import { User } from "../../domain/entity";
 
@@ -24,11 +22,6 @@ export class Handler {
     const userByEmail = await this.repository.getByEmail(command.email);
 
     if (userByEmail) throw new EmailAlreadyRegistered(command.email);
-
-    if (command.password.length < 8) throw new PasswordMinimumLengthError();
-
-    if (command.password !== command.repeatedPassword)
-      throw new RepitedPasswordError();
 
     await this.repository.save(
       new User(

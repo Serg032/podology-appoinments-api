@@ -6,6 +6,7 @@ import { Construct } from "constructs";
 import "dotenv/config";
 import { join } from "path";
 import { generateResourceName } from "../src/utils/generate-resouce-name";
+import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 
 interface LambdaStackProps extends cdk.StackProps {
   userTable: ITableV2;
@@ -32,7 +33,23 @@ export class LambdaStack extends cdk.Stack {
           USER_TABLE_NAME: props.userTable.tableName,
           JWT_SECRET_PARAMETER_NAME: this.jwtPrivateKeyName,
         },
+        timeout: cdk.Duration.seconds(5),
       }
+    );
+
+    registerUserLambda.addToRolePolicy(
+      new PolicyStatement({
+        actions: [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:DescribeParameters",
+        ],
+        resources: [
+          `arn:aws:ssm:${cdk.Stack.of(this).region}:${
+            cdk.Stack.of(this).account
+          }:parameter/podologist-authentication-service/jwt-secret`,
+        ],
+      })
     );
 
     const getUserByIdLambda = new NodejsFunction(

@@ -3,8 +3,8 @@ import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm";
 export class ParameterStoreService {
   private ssmClient: SSMClient;
 
-  constructor(region: string) {
-    this.ssmClient = new SSMClient({ region });
+  constructor() {
+    this.ssmClient = new SSMClient();
   }
 
   async getParameterValue(
