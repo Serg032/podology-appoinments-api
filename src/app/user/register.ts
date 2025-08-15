@@ -64,10 +64,11 @@ export const handler = async (
       password: hashedPassword,
     });
 
-    const token = jwtAdapter.generateToken({
+    const token = jwtAdapter.generateAccessToken({
       id: parsedBody.id,
+      name: parsedBody.name,
+      surname: parsedBody.surname,
       email: parsedBody.email,
-      password: parsedBody.password,
     });
 
     const response: SuccessfullRegisterResponse = {
